@@ -1,15 +1,15 @@
 export default class Block {
-    #m_active;
+    m_active = false;
     m_blockType;
-    BLOCK_RENDER_SIZE = 16;
+    BLOCK_RENDER_SIZE = 1;
     constructor(){
-
+        this.m_active = false;
     }
     IsActive(){
         return this.m_active;
     }
     SetActive(active){
-        this.active = active;
+        this.m_active = active;
     }
 };
 
@@ -24,4 +24,4 @@ const BlockType ={
     BlockType_NumTypes: 0,
 };
 
-export const RENDER_SIZE = 16;
+export const BLOCK_RENDER_SIZE = 1;
