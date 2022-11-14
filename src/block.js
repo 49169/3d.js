@@ -1,12 +1,12 @@
-class Block {
+export default class Block {
     #m_active;
     m_blockType;
 
     constructor(){
 
     }
-    get IsActive(){
-        return m_active;
+    IsActive(){
+        return this.m_active;
     }
     SetActive(active){
         this.active = active;
@@ -15,11 +15,11 @@ class Block {
 
 const BlockType ={
     BlockType_Default: 0,
-    BlockType_Grass,
-    BlockType_Dirt,
-    BlockType_Water,
-    BlockType_Stone,
-    BlockType_Wood,
-    BlockType_Sand,
-    BlockType_NumTypes,
+    BlockType_Grass: 0,
+    BlockType_Dirt: 0,
+    BlockType_Water: 0,
+    BlockType_Stone: 0,
+    BlockType_Wood: 0,
+    BlockType_Sand: 0,
+    BlockType_NumTypes: 0,
 };
