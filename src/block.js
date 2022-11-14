@@ -1,7 +1,7 @@
 export default class Block {
     #m_active;
     m_blockType;
-
+    BLOCK_RENDER_SIZE = 16;
     constructor(){
 
     }
@@ -23,3 +23,5 @@ const BlockType ={
     BlockType_Sand: 0,
     BlockType_NumTypes: 0,
 };
+
+export const RENDER_SIZE = 16;

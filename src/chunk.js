@@ -1,4 +1,4 @@
-import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.146.0/three.module.js';
+import * as THREE from 'three';
 import Block from '/src/block.js';
 export default class Chunk {
     constructor(){
@@ -15,6 +15,7 @@ export default class Chunk {
     geometry;
     vertices = [];
     CHUNK_SIZE = 16;
+    geometry;
     get IsLoaded(){
         return this.#loaded;
     }
@@ -60,14 +61,14 @@ export default class Chunk {
         //m_pRenderer->FinishMesh(m_meshID, -1, m_pChunkManager->GetMaterialID());
     }
     CreateCube(x,y,z){
-        var p1 = new THREE.Vector3(x - Block.BLOCK_RENDER_SIZE, y - Block.BLOCK_RENDER_SIZE, z + Block.BLOCK_RENDER_SIZE);
-        var p2 = new THREE.Vector3 (x + Block.BLOCK_RENDER_SIZE, y - Block.BLOCK_RENDER_SIZE, z + Block.BLOCK_RENDER_SIZE);
-        var p3 = new THREE.Vector3(x + Block.BLOCK_RENDER_SIZE, y + Block.BLOCK_RENDER_SIZE, z + Block.BLOCK_RENDER_SIZE);
-         var p4 = new THREE.Vector3(x - Block.BLOCK_RENDER_SIZE, y + Block.BLOCK_RENDER_SIZE, z + Block.BLOCK_RENDER_SIZE);
-        var p5 = new THREE.Vector3(x + Block.BLOCK_RENDER_SIZE, y - Block.BLOCK_RENDER_SIZE, z - Block.BLOCK_RENDER_SIZE);
-        var p6 = new THREE.Vector3(x - Block.BLOCK_RENDER_SIZE, y - Block.BLOCK_RENDER_SIZE, z - Block.BLOCK_RENDER_SIZE);
-        var p7 = new THREE.Vector3(x - Block.BLOCK_RENDER_SIZE, y + Block.BLOCK_RENDER_SIZE, z - Block.BLOCK_RENDER_SIZE);
-        var p8 = new THREE.Vector3(x + Block.BLOCK_RENDER_SIZE, y + Block.BLOCK_RENDER_SIZE, z - Block.BLOCK_RENDER_SIZE);
+        var p1 = new THREE.Vector3(x - 16, y - 16, z + 16);
+        var p2 = new THREE.Vector3 (x + 16, y - 16, z + 16);
+        var p3 = new THREE.Vector3(x + 16, y + 16, z + 16);
+         var p4 = new THREE.Vector3(x - 16, y + 16, z + 16);
+        var p5 = new THREE.Vector3(x + 16, y - 16, z - 16);
+        var p6 = new THREE.Vector3(x - 16, y - 16, z - 16);
+        var p7 = new THREE.Vector3(x - 16, y + 16, z - 16);
+        var p8 = new THREE.Vector3(x + 16, y + 16, z - 16);
     
         var n1;
         var v1;
@@ -83,45 +84,45 @@ export default class Chunk {
         var b = 1.0;
         var a = 1.0; // Front     
         n1 = new THREE.Vector3(0.0 , 0.0 , 1.0 );
-        v1 = this.vertices.push(p1 + n1);
-        v2 = this.vertices.push(p2 + n1);
-        v3 = this.vertices.push(p3 + n1);
-        v4 = this.vertices.push(p4 + n1);
+        v1 = this.vertices.push(p1.add(n1));
+        v2 = this.vertices.push(p2.add(n1));
+        v3 = this.vertices.push(p3.add(n1));
+        v4 = this.vertices.push(p4.add(n1));
         //m_pRenderer->AddTriangleToMesh(m_meshID, v1, v2, v3);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v1, v3, v4); // Back     
         n1 = new THREE.Vector3(0.0 , 0.0 , -1.0 );
-        v5 = this.vertices.push(p5 + n1);
-        v6 = this.vertices.push(p6 + n1);
-        v7 = this.vertices.push(p7 + n1);
-        v8 = this.vertices.push(p8 + n1);
+        v5 = this.vertices.push(p5.add(n1));
+        v6 = this.vertices.push(p6.add(n1));
+        v7 = this.vertices.push(p7.add(n1));
+        v8 = this.vertices.push(p8.add(n1));
         //m_pRenderer->AddTriangleToMesh(m_meshID, v5, v6, v7);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v5, v7, v8); // Right     
         n1 = new THREE.Vector3(1.0, 0.0, 0.0);
-        v2 = this.vertices.push(p2 + n1);
-        v5 = this.vertices.push(p5 + n1);
-        v8 = this.vertices.push(p8 + n1);
-        v3 = this.vertices.push(p3 + n1);
+        v2 = this.vertices.push(p2.add(n1));
+        v5 = this.vertices.push(p5.add(n1));
+        v8 = this.vertices.push(p8.add(n1));
+        v3 = this.vertices.push(p3.add(n1));
         //m_pRenderer->AddTriangleToMesh(m_meshID, v2, v5, v8);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v2, v8, v3); // left     
         n1 = new THREE.Vector3(-1.0, 0.0, 0.0);
-        v6 =this.vertices.push(p6 + n1);
-        v1 = this.vertices.push(p1 + n1);
-        v4 = this.vertices.push(p4 + n1);
-        v7 = this.vertices.push(p7 + n1);
+        v6 =this.vertices.push(p6.add(n1));
+        v1 = this.vertices.push(p1.add(n1));
+        v4 = this.vertices.push(p4.add(n1));
+        v7 = this.vertices.push(p7.add(n1));
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v1, v4);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v4, v7); // Top     
         n1 = new THREE.Vector3(0.0 , 1.0 , 0.0 );
-        v4 = this.vertices.push(p4 + n1);
-        v3 = this.vertices.push(p3 + n1);
-        v8 = this.vertices.push(p8 + n1);
-        v7 = this.vertices.push(p7 + n1);
+        v4 = this.vertices.push(p4.add(n1));
+        v3 = this.vertices.push(p3.add(n1));
+        v8 = this.vertices.push(p8.add(n1));
+        v7 = this.vertices.push(p7.add(n1));
         // m_pRenderer->AddTriangleToMesh(m_meshID, v4, v3, v8);
         // m_pRenderer->AddTriangleToMesh(m_meshID, v4, v8, v7); // Bottom     
         n1 = new THREE.Vector3(0.0 , -1.0 , 0.0 );
-        v6 = this.vertices.push(p6 + n1);
-        v5 = this.vertices.push(p5 + n1);
-        v2 = this.vertices.push(p2 + n1);
-        v1 = this.vertices.push(p1 + n1);
+        v6 = this.vertices.push(p6.add(n1));
+        v5 = this.vertices.push(p5.add(n1));
+        v2 = this.vertices.push(p2.add(n1));
+        v1 = this.vertices.push(p1.add(n1));
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v5, v2);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v2, v1);
     }
@@ -129,14 +130,17 @@ export default class Chunk {
     Render(){
         this.newVertices = [];
         for(let i = 0; i<24; i++){
+            //console.log(this.vertices[i]);
             this.newVertices.push(this.vertices[i].x);
             this.newVertices.push(this.vertices[i].y);
             this.newVertices.push(this.vertices[i].z);
         }
+        //console.log(this.newVertices);
         this.newVertices = new Float32Array(this.newVertices);
-        this.geometry.setAttribute( 'position', new THREE.BufferAttribute( this.vertices, 3 ) );
+        
+        this.geometry.setAttribute( 'position', new THREE.BufferAttribute( this.newVertices, 3 ) );
         const material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-        this.mesh = new THREE.Mesh( geometry, material );
+        this.mesh = new THREE.Mesh( this.geometry, material );
     }
     Setup_Sphere() {
         for (var z = 0; z < CHUNK_SIZE; z++) {
@@ -241,9 +245,9 @@ function UpdateRenderList() {
         if (pChunk.IsLoaded() && pChunk.IsSetup()) {
           if (pChunk.ShouldRender()) // Early flags check so we don't always have to do the frustum check... 
           {// Check if this chunk is inside the camera frustum                    
-            c_offset = (Chunk.CHUNK_SIZE * Block.BLOCK_RENDER_SIZE) - Block.BLOCK_RENDER_SIZE;
+            c_offset = (Chunk.CHUNK_SIZE * 16) - 16;
             chunkCenter = pChunk.GetPosition() + Vector3(c_offset, c_offset, c_offset);
-            c_size = Chunk.CHUNK_SIZE * Block.BLOCK_RENDER_SIZE;
+            c_size = Chunk.CHUNK_SIZE * 16;
             if (m_pRenderer.CubeInFrustum(m_pRenderer.GetActiveViewPort(), chunkCenter, c_size, c_size, c_size)) {
               m_vpChunkRenderList.push_back(pChunk);
             }
