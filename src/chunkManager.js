@@ -15,7 +15,7 @@ export default class ChunkManager{
                 var newChunk = new Chunk();
                 newChunk.LoadChunk();
                 //newChunk.Setup_Landscape();
-                newChunk.Setup_Landscape2((i+1)*16,(j+1)*16,simplex);
+                newChunk.Setup_Landscape2((i+1)*32,(j+1)*32,simplex);
                 //console.log(simplex(i+1,j+1));
                 newChunk.CreateMesh();
                 newChunk.Render();

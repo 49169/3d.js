@@ -246,12 +246,16 @@ export default class Chunk {
         }
       }
     }
+    //1 Chunk is 16x16
+    //Send 4x4 heightmap
+    //Divide heightmap by 4
+
     Setup_Landscape2(xBound, zBound, simplex){
       for (var x = 0; x < this.CHUNK_SIZE; x++) {
         for (var z = 0; z < this.CHUNK_SIZE; z++) { // Use the noise library to get the height value of x, z             
           //float height = m_pChunkManager->GetNoiseValue(x, z);              
           // Use the height map texture to get the height value of x, z  
-          var height = (simplex( (x+xBound)/16, (z+zBound)/16) * (this.CHUNK_SIZE - 1) * 1.0 ) * 1.0;
+          var height = (simplex( (x)+(xBound)/(16*16), (z)+(zBound)/(16*16) ) * (this.CHUNK_SIZE - 1) * 1.0 ) * 1.0;
           //console.log(height);
           for (var y = 0; y < height; y++) {
             //console.log(y);
