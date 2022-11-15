@@ -29,15 +29,19 @@ var chunk = new Chunk();
 var chunkManager = new ChunkManager();
 chunkManager.init();
 chunkManager.Update();
+console.log(chunkManager.m_pChunks);
 for(var i =0 ;i<chunkManager.m_pChunks.length; i++){
     //console.log(chunkManager.m_pChunks[i].mesh);
-    chunkManager.m_pChunks[i].mesh.position.set((i%5)*16,0,0);
-    scene.add(chunkManager.m_pChunks[i].mesh);
+    for(var j =0; j<chunkManager.m_pChunks[0].length; j++){
+        chunkManager.m_pChunks[i][j].mesh.position.set(i*16,1,j*16);
+        scene.add(chunkManager.m_pChunks[i][j].mesh);
+    }
+    
 }
 
 chunk.LoadChunk();
 //chunk.Setup_Sphere();
-chunk.Setup_Landscape();
+//chunk.Setup_Landscape();
 chunk.CreateMesh();
 
 chunk.Render();

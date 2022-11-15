@@ -63,7 +63,7 @@ export default class Chunk {
           }
         }
       }
-      console.log(this.m_pBlocks);
+      //console.log(this.m_pBlocks);
       //m_pRenderer->FinishMesh(m_meshID, -1, m_pChunkManager->GetMaterialID());
     }
     CreateCube(x,y,z){
@@ -199,7 +199,7 @@ export default class Chunk {
       //console.log(this.newVertices);
       this.newVertices = new Float32Array(this.newVertices);
       this.newNormals = new Float32Array(this.newNormals);
-      console.log(this.newVertices);
+      //console.log(this.newVertices);
       this.geometry.setAttribute( 'position', new THREE.BufferAttribute( this.newVertices, 3 ) );
       this.geometry.setAttribute( 'normal', new THREE.BufferAttribute(this.newNormals, 3));
       const material = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
@@ -241,6 +241,22 @@ export default class Chunk {
           var height = (simplex(x/16, z/16) * (this.CHUNK_SIZE - 1) * 1.0 ) * 1.0;
           for (var y = 0; y < height; y++) {
             this.m_pBlocks[x][y][z].SetActive(true);
+            //this.m_pBlocks[x][y][z].SetBlockType(BlockType_Grass);
+          }
+        }
+      }
+    }
+    Setup_Landscape2(xBound, zBound, simplex){
+      for (var x = 0; x < this.CHUNK_SIZE; x++) {
+        for (var z = 0; z < this.CHUNK_SIZE; z++) { // Use the noise library to get the height value of x, z             
+          //float height = m_pChunkManager->GetNoiseValue(x, z);              
+          // Use the height map texture to get the height value of x, z  
+          var height = (simplex( (x+xBound)/16, (z+zBound)/16) * (this.CHUNK_SIZE - 1) * 1.0 ) * 1.0;
+          //console.log(height);
+          for (var y = 0; y < height; y++) {
+            //console.log(y);
+            this.m_pBlocks[x][y][z].SetActive(true);
+            
             //this.m_pBlocks[x][y][z].SetBlockType(BlockType_Grass);
           }
         }

@@ -1,5 +1,5 @@
 import Chunk from '/src/chunk.js';
-
+import {createNoise2D} from 'https://cdn.skypack.dev/simplex-noise';
 export default class ChunkManager{
     m_cameraPosition;
     m_cameraView;
@@ -8,13 +8,19 @@ export default class ChunkManager{
     m_pChunks = [];
 
     init(){
-        for(var i = 0; i< 25; i++){
-            this.m_pChunks[i] = new Chunk();
-            this.m_pChunks[i].LoadChunk();
-            this.m_pChunks[i].Setup_Landscape();
-            this.m_pChunks[i].CreateMesh();
-            this.m_pChunks[i].Render();
-
+        const simplex = new createNoise2D();
+        for(var i = 0; i< 5; i++){
+            this.m_pChunks[i]  = []
+            for(var j = 0; j<5;j++){
+                var newChunk = new Chunk();
+                newChunk.LoadChunk();
+                //newChunk.Setup_Landscape();
+                newChunk.Setup_Landscape2((i+1)*16,(j+1)*16,simplex);
+                //console.log(simplex(i+1,j+1));
+                newChunk.CreateMesh();
+                newChunk.Render();
+                this.m_pChunks[i][j] = newChunk;
+            }
         }
     }
 
