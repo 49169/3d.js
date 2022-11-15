@@ -12,14 +12,19 @@ export default class ChunkManager{
         for(var i = 0; i< 5; i++){
             this.m_pChunks[i]  = []
             for(var j = 0; j<5;j++){
-                var newChunk = new Chunk();
-                newChunk.LoadChunk();
-                //newChunk.Setup_Landscape();
-                newChunk.Setup_Landscape2((i+1)*32,(j+1)*32,simplex);
-                //console.log(simplex(i+1,j+1));
-                newChunk.CreateMesh();
-                newChunk.Render();
-                this.m_pChunks[i][j] = newChunk;
+                this.m_pChunks[i][j]  = []
+                for(var k = 0; k<5;k++){
+                    var newChunk = new Chunk();
+                    newChunk.y = (k)*16;
+                    //console.log(newChunk.y);
+                    newChunk.LoadChunk();
+                    //newChunk.Setup_Landscape();
+                    newChunk.Setup_Landscape2(((i+1)/4),((j+1)/4),simplex);
+                    
+                    newChunk.CreateMesh();
+                    newChunk.Render();
+                    this.m_pChunks[i][j][k] = newChunk;
+                }
             }
         }
     }

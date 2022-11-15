@@ -7,7 +7,7 @@ export default class Chunk {
       
     }
     BLOCK_RENDER_SIZE = 1;
-    //x; y; z;
+    x; y; z;
     Update(dt){}
     m_pBlocks = [];
     loaded;
@@ -28,10 +28,11 @@ export default class Chunk {
                   this.m_pBlocks[i][j] = [];
                   for(var k = 0; k< this.CHUNK_SIZE; k++){
                     this.m_pBlocks[i][j][k] = new Block();
+                    this.m_pBlocks[i][j][k].SetActive(false);
                   }
                 };
             };
-        console.log("Loaded Chunk");
+        //console.log("Loaded Chunk");
         //console.log(this.m_pBlocks[0][0]);
     };
     UnloadChunk() { // Delete the blocks
@@ -50,6 +51,7 @@ export default class Chunk {
       
       //var  cube = new THREE.Mesh(geometry,material);
       //console.log(this.m_pBlocks[0][0][0].IsActive());
+      var lDefault = true;
       for (var x = 0; x < CHUNK_SIZE; x++) {
         for (var y = 0; y < CHUNK_SIZE; y++) {
           for (var z = 0; z < CHUNK_SIZE; z++) {
@@ -57,7 +59,20 @@ export default class Chunk {
               //continue;
             }
             else{
-              this.CreateCube(x,y,z);
+              var lXNegative = lDefault;
+              if (x > 0) {lXNegative = !this.m_pBlocks[x - 1][y][z].IsActive()};
+              var lXPositive = lDefault;
+              if (x < CHUNK_SIZE - 1){lXPositive = !this.m_pBlocks[x + 1][y][z].IsActive()};
+              var lYNegative = lDefault;
+              if (y > 0) {lYNegative = !this.m_pBlocks[x][y - 1][z].IsActive()};
+              var lYPositive = lDefault;
+              if (y < CHUNK_SIZE - 1){ lYPositive = !this.m_pBlocks[x][y + 1][z].IsActive()};
+              var lZNegative = lDefault;
+              if (z > 0){ lZNegative = !this.m_pBlocks[x][y][z - 1].IsActive()};
+              var lZPositive = lDefault;
+              if (z < CHUNK_SIZE - 1){lZPositive = !this.m_pBlocks[x][y][z + 1].IsActive()};
+              //lYPositive= false;
+              this.CreateCube(x,y,z, lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive);
             }
             
           }
@@ -66,7 +81,7 @@ export default class Chunk {
       //console.log(this.m_pBlocks);
       //m_pRenderer->FinishMesh(m_meshID, -1, m_pChunkManager->GetMaterialID());
     }
-    CreateCube(x,y,z){
+    CreateCube(x,y,z, lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive){
         var p1 = new THREE.Vector3(x - this.BLOCK_RENDER_SIZE, y - this.BLOCK_RENDER_SIZE, z + this.BLOCK_RENDER_SIZE);
         var p2 = new THREE.Vector3(x + this.BLOCK_RENDER_SIZE, y - this.BLOCK_RENDER_SIZE, z + this.BLOCK_RENDER_SIZE);
         var p3 = new THREE.Vector3(x + this.BLOCK_RENDER_SIZE, y + this.BLOCK_RENDER_SIZE, z + this.BLOCK_RENDER_SIZE);
@@ -88,96 +103,120 @@ export default class Chunk {
         var r = 1.0;
         var g = 1.0;
         var b = 1.0;
-        var a = 1.0; // Front     
-        n1 = new THREE.Vector3(0.0 , 0.0 , 1.0 );
-        v1 = (p1.add(n1));
-        v2 = (p2.add(n1));
-        v3 = (p3.add(n1));
-        v4 = (p4.add(n1));
-        for(var i = 0; i<6; i++){this.normals.push(n1);}
-        this.vertices.push(v1);
-        this.vertices.push(v2);
-        this.vertices.push(v3);
+        var a = 1.0; 
+        // Front
+        if(lZNegative){
+          n1 = new THREE.Vector3(0.0 , 0.0 , 1.0 );
+          v1 = (p1.add(n1));
+          v2 = (p2.add(n1));
+          v3 = (p3.add(n1));
+          v4 = (p4.add(n1));
+          for(var i = 0; i<6; i++){this.normals.push(n1);}
+          this.vertices.push(v1);
+          this.vertices.push(v2);
+          this.vertices.push(v3);
 
-        this.vertices.push(v1);
-        this.vertices.push(v3);
-        this.vertices.push(v4);
+          this.vertices.push(v1);
+          this.vertices.push(v3);
+          this.vertices.push(v4);
+        } 
+        
 
         //m_pRenderer->AddTriangleToMesh(m_meshID, v1, v2, v3);
-        //m_pRenderer->AddTriangleToMesh(m_meshID, v1, v3, v4); // Back     
-        n1 = new THREE.Vector3(0.0 , 0.0 , -1.0 );
-        v5 = (p5.add(n1));
-        v6 = (p6.add(n1));
-        v7 = (p7.add(n1));
-        v8 = (p8.add(n1));
-        for(var i = 0; i<6; i++){this.normals.push(n1);}
-        this.vertices.push(v5);
-        this.vertices.push(v6);
-        this.vertices.push(v7);
+        //m_pRenderer->AddTriangleToMesh(m_meshID, v1, v3, v4); 
+        // Back 
+        if(lZPositive){
+          n1 = new THREE.Vector3(0.0 , 0.0 , -1.0 );
+          v5 = (p5.add(n1));
+          v6 = (p6.add(n1));
+          v7 = (p7.add(n1));
+          v8 = (p8.add(n1));
+          for(var i = 0; i<6; i++){this.normals.push(n1);}
+          this.vertices.push(v5);
+          this.vertices.push(v6);
+          this.vertices.push(v7);
 
-        this.vertices.push(v5);
-        this.vertices.push(v7);
-        this.vertices.push(v8);
+          this.vertices.push(v5);
+          this.vertices.push(v7);
+          this.vertices.push(v8);
+        }   
+        
         //m_pRenderer->AddTriangleToMesh(m_meshID, v5, v6, v7);
-        //m_pRenderer->AddTriangleToMesh(m_meshID, v5, v7, v8); // Right     
-        n1 = new THREE.Vector3(1.0, 0.0, 0.0);
-        v2 = (p2.add(n1));
-        v5 = (p5.add(n1));
-        v8 = (p8.add(n1));
-        v3 = (p3.add(n1));
-        for(var i = 0; i<6; i++){this.normals.push(n1);}
-        this.vertices.push(v2);
-        this.vertices.push(v5);
-        this.vertices.push(v8);
+        //m_pRenderer->AddTriangleToMesh(m_meshID, v5, v7, v8); 
+        // Right
+        if(lXPositive){
+          n1 = new THREE.Vector3(1.0, 0.0, 0.0);
+          v2 = (p2.add(n1));
+          v5 = (p5.add(n1));
+          v8 = (p8.add(n1));
+          v3 = (p3.add(n1));
+          for(var i = 0; i<6; i++){this.normals.push(n1);}
+          this.vertices.push(v2);
+          this.vertices.push(v5);
+          this.vertices.push(v8);
 
-        this.vertices.push(v2);
-        this.vertices.push(v8);
-        this.vertices.push(v3);
+          this.vertices.push(v2);
+          this.vertices.push(v8);
+          this.vertices.push(v3);
+        }  
+        
         //m_pRenderer->AddTriangleToMesh(m_meshID, v2, v5, v8);
-        //m_pRenderer->AddTriangleToMesh(m_meshID, v2, v8, v3); // left     
-        n1 = new THREE.Vector3(-1.0, 0.0, 0.0);
-        v6 =(p6.add(n1));
-        v1 = (p1.add(n1));
-        v4 = (p4.add(n1));
-        v7 = (p7.add(n1));
-        for(var i = 0; i<6; i++){this.normals.push(n1);}
-        this.vertices.push(v6);
-        this.vertices.push(v1);
-        this.vertices.push(v4);
+        //m_pRenderer->AddTriangleToMesh(m_meshID, v2, v8, v3); 
+        // left
+        if(lXNegative){
+          n1 = new THREE.Vector3(-1.0, 0.0, 0.0);
+          v6 =(p6.add(n1));
+          v1 = (p1.add(n1));
+          v4 = (p4.add(n1));
+          v7 = (p7.add(n1));
+          for(var i = 0; i<6; i++){this.normals.push(n1);}
+          this.vertices.push(v6);
+          this.vertices.push(v1);
+          this.vertices.push(v4);
 
-        this.vertices.push(v6);
-        this.vertices.push(v4);
-        this.vertices.push(v7);
+          this.vertices.push(v6);
+          this.vertices.push(v4);
+          this.vertices.push(v7);
+        }    
+        
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v1, v4);
-        //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v4, v7); // Top     
-        n1 = new THREE.Vector3(0.0 , 1.0 , 0.0 );
-        v4 = (p4.add(n1));
-        v3 = (p3.add(n1));
-        v8 = (p8.add(n1));
-        v7 = (p7.add(n1));
-        for(var i = 0; i<6; i++){this.normals.push(n1);}
-        this.vertices.push(v4);
-        this.vertices.push(v3);
-        this.vertices.push(v8);
+        //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v4, v7); 
+        // Top
+        if(lYPositive){
+          n1 = new THREE.Vector3(0.0 , 1.0 , 0.0 );
+          v4 = (p4.add(n1));
+          v3 = (p3.add(n1));
+          v8 = (p8.add(n1));
+          v7 = (p7.add(n1));
+          for(var i = 0; i<6; i++){this.normals.push(n1);}
+          this.vertices.push(v4);
+          this.vertices.push(v3);
+          this.vertices.push(v8);
 
-        this.vertices.push(v4);
-        this.vertices.push(v8);
-        this.vertices.push(v7);
+          this.vertices.push(v4);
+          this.vertices.push(v8);
+          this.vertices.push(v7);
+        }  
+        
         // m_pRenderer->AddTriangleToMesh(m_meshID, v4, v3, v8);
-        // m_pRenderer->AddTriangleToMesh(m_meshID, v4, v8, v7); // Bottom     
-        n1 = new THREE.Vector3(0.0 , -1.0 , 0.0 );
-        v6 = (p6.add(n1));
-        v5 = (p5.add(n1));
-        v2 = (p2.add(n1));
-        v1 = (p1.add(n1));
-        for(var i = 0; i<6; i++){this.normals.push(n1);}
-        this.vertices.push(v6);
-        this.vertices.push(v5);
-        this.vertices.push(v2);
+        // m_pRenderer->AddTriangleToMesh(m_meshID, v4, v8, v7); 
+        // Bottom
+        if(lYNegative){
+          n1 = new THREE.Vector3(0.0 , -1.0 , 0.0 );
+          v6 = (p6.add(n1));
+          v5 = (p5.add(n1));
+          v2 = (p2.add(n1));
+          v1 = (p1.add(n1));
+          for(var i = 0; i<6; i++){this.normals.push(n1);}
+          this.vertices.push(v6);
+          this.vertices.push(v5);
+          this.vertices.push(v2);
 
-        this.vertices.push(v6);
-        this.vertices.push(v2);
-        this.vertices.push(v1);
+          this.vertices.push(v6);
+          this.vertices.push(v2);
+          this.vertices.push(v1);
+        }
+        
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v5, v2);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v2, v1);
     }
@@ -251,16 +290,18 @@ export default class Chunk {
     //Divide heightmap by 4
 
     Setup_Landscape2(xBound, zBound, simplex){
+      var incr = zBound/16;
       for (var x = 0; x < this.CHUNK_SIZE; x++) {
-        for (var z = 0; z < this.CHUNK_SIZE; z++) { // Use the noise library to get the height value of x, z             
-          //float height = m_pChunkManager->GetNoiseValue(x, z);              
+        for (var z = 0; z < this.CHUNK_SIZE; z++) { // Use the noise library to get the height value of x, z                       
           // Use the height map texture to get the height value of x, z  
-          var height = (simplex( (x)+(xBound)/(16*16), (z)+(zBound)/(16*16) ) * (this.CHUNK_SIZE - 1) * 1.0 ) * 1.0;
-          //console.log(height);
-          for (var y = 0; y < height; y++) {
-            //console.log(y);
-            this.m_pBlocks[x][y][z].SetActive(true);
-            
+          var height = ((simplex( (x/64)+(xBound), (z/64)+(zBound) )+1) * (this.CHUNK_SIZE - 1) * 1.0 );
+          for (var y = 0; y < this.CHUNK_SIZE; y++) {
+            //var height = ((simplex( (x/64)+(xBound), (z/64)+(zBound) )+1) * (this.CHUNK_SIZE - 1) * 1.0 );
+            //console.log(height);
+            if(this.y+y < height){
+              //console.log(this.y+y);
+              this.m_pBlocks[x][y][z].SetActive(true);
+            }
             //this.m_pBlocks[x][y][z].SetBlockType(BlockType_Grass);
           }
         }
