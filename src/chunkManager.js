@@ -8,8 +8,13 @@ export default class ChunkManager{
     m_pChunks = [];
 
     init(){
-        for(var i = 0; i< 10; i++){
+        for(var i = 0; i< 25; i++){
             this.m_pChunks[i] = new Chunk();
+            this.m_pChunks[i].LoadChunk();
+            this.m_pChunks[i].Setup_Landscape();
+            this.m_pChunks[i].CreateMesh();
+            this.m_pChunks[i].Render();
+
         }
     }
 

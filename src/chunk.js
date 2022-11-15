@@ -7,6 +7,7 @@ export default class Chunk {
       
     }
     BLOCK_RENDER_SIZE = 1;
+    //x; y; z;
     Update(dt){}
     m_pBlocks = [];
     loaded;
