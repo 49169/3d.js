@@ -6,7 +6,7 @@ export default class Chunk {
     constructor(){
       
     }
-    BLOCK_RENDER_SIZE =1;
+    BLOCK_RENDER_SIZE =0.5;
     //x; y; z;
     chunkY;
     Update(dt){}
@@ -17,24 +17,23 @@ export default class Chunk {
     vertices = [];
     normals = [];
     CHUNK_SIZE = 16;
-    IsLoaded(){
-        return this.loaded;
-    }
+    IsLoaded(){return this.loaded;}
+
     LoadChunk(){ // Create the blocks
-        this.m_pBlocks = [];
-            for (var i = 0; i < this.CHUNK_SIZE; i++) {
-                this.m_pBlocks[i] = [];
-                for (var j = 0; j < this.CHUNK_SIZE; j++) {
-                  //this.m_pBlocks[i][j] = new Array(this.CHUNK_SIZE).fill(new Block());
-                  this.m_pBlocks[i][j] = [];
-                  for(var k = 0; k< this.CHUNK_SIZE; k++){
-                    this.m_pBlocks[i][j][k] = new Block();
-                    this.m_pBlocks[i][j][k].SetActive(false);
-                  }
-                };
-            };
-        //console.log("Loaded Chunk");
-        //console.log(this.m_pBlocks[0][0]);
+      this.m_pBlocks = [];
+      for (var i = 0; i < this.CHUNK_SIZE; i++) {
+          this.m_pBlocks[i] = [];
+          for (var j = 0; j < this.CHUNK_SIZE; j++) {
+            //this.m_pBlocks[i][j] = new Array(this.CHUNK_SIZE).fill(new Block());
+            this.m_pBlocks[i][j] = [];
+            for(var k = 0; k< this.CHUNK_SIZE; k++){
+              this.m_pBlocks[i][j][k] = new Block();
+              this.m_pBlocks[i][j][k].SetActive(false);
+            }
+          };
+      };
+      //console.log("Loaded Chunk");
+      //console.log(this.m_pBlocks[0][0]);
     };
     UnloadChunk() { // Delete the blocks
       for (let i = 0; i < CHUNK_SIZE; ++i) {
@@ -52,7 +51,7 @@ export default class Chunk {
       
       //var  cube = new THREE.Mesh(geometry,material);
       //console.log(this.m_pBlocks[0][0][0].IsActive());
-      var lDefault = true;
+      var lDefault = false;
       
       for (var x = 0; x < CHUNK_SIZE; x++) {
         for (var y = 0; y < CHUNK_SIZE; y++) {
@@ -63,7 +62,7 @@ export default class Chunk {
             else{
               var lXNegative = lDefault;
               if (x > 0) {lXNegative = this.m_pBlocks[x - 1][y][z].IsActive()};
-
+              //if(x == 0){ }
               var lXPositive = lDefault;
               if (x < CHUNK_SIZE - 1){lXPositive = this.m_pBlocks[x + 1][y][z].IsActive()};
 
@@ -89,14 +88,14 @@ export default class Chunk {
               }
               //lYPositive = true;
               //lYNegative = true;
-              //this.CreateCube(x,y,z, lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive);
-              this.CreateCube(x,y,z, false, false, false, false, false, false);
+              this.CreateCube(x,y,z, lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive);
+              //this.CreateCube(x,y,z, false, false, false, false, false, false);
             }
             
           }
         }
       }
-      console.log(this.vertices)
+      //console.log(this.vertices)
       //console.log(this.m_pBlocks);
       //m_pRenderer->FinishMesh(m_meshID, -1, m_pChunkManager->GetMaterialID());
     }
@@ -125,12 +124,12 @@ export default class Chunk {
         var a = 1.0; 
         // Front
         n1 = new THREE.Vector3(0.0 , 0.0 , 1.0);
-        if(!lZNegative){
+        if(!lZPositive){
           
-          v1 = (p1.add(n1));
-          v2 = (p2.add(n1));
-          v3 = (p3.add(n1));
-          v4 = (p4.add(n1));
+          v1 = (p1);
+          v2 = (p2);
+          v3 = (p3);
+          v4 = (p4);
           for(var i = 0; i<6; i++){this.normals.push(n1);}
           this.vertices.push(v1);
           this.vertices.push(v2);
@@ -145,12 +144,12 @@ export default class Chunk {
 
         // Back 
         n1 = new THREE.Vector3(0.0 , 0.0 , -1.0 );
-        if(!lZPositive){
+        if(!lZNegative){
           
-          v5 = (p5.add(n1));
-          v6 = (p6.add(n1));
-          v7 = (p7.add(n1));
-          v8 = (p8.add(n1));
+          v5 = (p5);
+          v6 = (p6);
+          v7 = (p7);
+          v8 = (p8);
           for(var i = 0; i<6; i++){this.normals.push(n1);}
           this.vertices.push(v5);
           this.vertices.push(v6);
@@ -164,14 +163,13 @@ export default class Chunk {
         //m_pRenderer->AddTriangleToMesh(m_meshID, v5, v7, v8); 
 
         // Right
-        
         if(!lXPositive){
           n1 = new THREE.Vector3(1.0, 0.0, 0.0);
-          v2 = (p2.add(n1));
-          v5 = (p5.add(n1));
-          v8 = (p8.add(n1));
-          v3 = (p3.add(n1));
-          for(var i = 0; i<6; i++){this.normals.push(n1);}
+          v2 = (p2);
+          v5 = (p5);
+          v8 = (p8);
+          v3 = (p3);
+          for(var i = 0; i<6; i++){this.normals.push(n1)};
           this.vertices.push(v2);
           this.vertices.push(v5);
           this.vertices.push(v8);
@@ -188,10 +186,10 @@ export default class Chunk {
         n1 = new THREE.Vector3(-1.0, 0.0, 0.0);
         if(!lXNegative){
           
-          v6 =(p6.add(n1));
-          v1 = (p1.add(n1));
-          v4 = (p4.add(n1));
-          v7 = (p7.add(n1));
+          v6 =(p6);
+          v1 = (p1);
+          v4 = (p4);
+          v7 = (p7);
           for(var i = 0; i<6; i++){this.normals.push(n1);}
           this.vertices.push(v6);
           this.vertices.push(v1);
@@ -209,10 +207,10 @@ export default class Chunk {
         n1 = new THREE.Vector3(0.0 , 1.0 , 0.0 );
         if(!lYPositive){
           
-          v4 = (p4.add(n1));
-          v3 = (p3.add(n1));
-          v8 = (p8.add(n1));
-          v7 = (p7.add(n1));
+          v4 = (p4);
+          v3 = (p3);
+          v8 = (p8);
+          v7 = (p7);
           for(var i = 0; i<6; i++){this.normals.push(n1);}
           this.vertices.push(v4);
           this.vertices.push(v3);
@@ -229,10 +227,10 @@ export default class Chunk {
         n1 = new THREE.Vector3(0.0 , -1.0 , 0.0 );
         if(!lYNegative){
           
-          v6 = (p6.add(n1));
-          v5 = (p5.add(n1));
-          v2 = (p2.add(n1));
-          v1 = (p1.add(n1));
+          v6 = (p6);
+          v5 = (p5);
+          v2 = (p2);
+          v1 = (p1);
           for(var i = 0; i<6; i++){this.normals.push(n1);}
           this.vertices.push(v6);
           this.vertices.push(v5);
@@ -275,7 +273,7 @@ export default class Chunk {
       line.material.opacity = 0.25;
       line.material.transparent = true;
       this.mesh = new THREE.Mesh( this.geometry, material );
-      this.mesh = line;
+     // this.mesh = line;
     }
     Setup_Sphere() {
       var CHUNK_SIZE = this.CHUNK_SIZE;
@@ -299,12 +297,12 @@ export default class Chunk {
     Setup_Landscape() {
       const simplex = new createNoise2D();
       //Texture * heightTexture = m_pRenderer -> GetTexture(m_pChunkManager -> GetHeightMapTexture());
-      for (var x = 0; x < this.CHUNK_SIZE-1; x++) {
-        for (var z = 0; z < this.CHUNK_SIZE-1; z++) { // Use the noise library to get the height value of x, z             
+      for (var x = 0; x < this.CHUNK_SIZE; x++) {
+        for (var z = 0; z < this.CHUNK_SIZE; z++) { // Use the noise library to get the height value of x, z             
           //float height = m_pChunkManager->GetNoiseValue(x, z);              
           // Use the height map texture to get the height value of x, z  
           //var height = (simplex(x/16, z/16) * (this.CHUNK_SIZE - 1) * 1.0 ) * 1.0;
-          var height = 1;
+          var height = 5;
           for (var y = 0; y < height; y++) {
             //console.log(y);
             this.m_pBlocks[x][y][z].SetActive(true);
@@ -320,13 +318,16 @@ export default class Chunk {
     Setup_Landscape2(xBound, zBound, simplex){
       var incr = zBound/16;
       for (var x = 0; x < this.CHUNK_SIZE; x++) {
+        
         for (var z = 0; z < this.CHUNK_SIZE; z++) { // Use the noise library to get the height value of x, z                       
           // Use the height map texture to get the height value of x, z  
-          var height = ((simplex( (x/64)+(xBound), (z/64)+(zBound) )+1) * (this.CHUNK_SIZE - 1) * 1.0 );
+          
+          var height = ((simplex( (x/128/2)+(xBound), (z/128/2)+(zBound) )+1) * (this.CHUNK_SIZE - 1) * 1.0 );
+          //console.log(height);
           for (var y = 0; y < this.CHUNK_SIZE; y++) {
             //var height = ((simplex( (x/64)+(xBound), (z/64)+(zBound) )+1) * (this.CHUNK_SIZE - 1) * 1.0 );
-            //console.log(height);
-            if(this.ChunkY+y < height){
+            //console.log(this.chunkY+y);
+            if(this.chunkY+y < height){
               //console.log(this.y+y);
               this.m_pBlocks[x][y][z].SetActive(true);
             }

@@ -36,7 +36,7 @@ for(var i =0 ;i<chunkManager.m_pChunks.length; i++){
     //console.log(chunkManager.m_pChunks[i].mesh);
     for(var j =0; j<chunkManager.m_pChunks[0].length; j++){
         for(var k =0; k<chunkManager.m_pChunks[0][0].length; k++){
-            chunkManager.m_pChunks[i][j][k].mesh.position.set(i*32,k*32,j*32);
+            chunkManager.m_pChunks[i][j][k].mesh.position.set(i*16,k*16,j*16);
             //chunkManager.m_pChunks[i][j][k].y = k*16;
             scene.add(chunkManager.m_pChunks[i][j][k].mesh);
         }

@@ -6,21 +6,34 @@ export default class ChunkManager{
     m_vpChunkLoadList = [];
     m_forceVisibilityUpdate;
     m_pChunks = [];
+    CHUNK_SIZE = 16;
 
     init(){
         const simplex = new createNoise2D();
-        for(var i = 0; i< 1; i++){
+        var noiseMap = [];
+        for(var i = 0; i< 10; i++){
+            for(var j = 0; j<10;j++){
+                for(var x = 0; x<this.CHUNK_SIZE; x++){
+                    for(var y = 0; y<this.CHUNK_SIZE; y++){
+                        //noiseMap.push(simplex(((x/128)+ ((i+1)/8)), (y/128)+(j+1)/8));
+                    }
+                }
+            }
+        }
+        for(var i = 0; i< 10; i++){
             this.m_pChunks[i]  = []
-            for(var j = 0; j<1;j++){
+            for(var j = 0; j<10;j++){
                 this.m_pChunks[i][j]  = []
-                for(var k = 0; k<1;k++){
+                for(var k = 0; k<3;k++){
                     var newChunk = new Chunk();
                     newChunk.chunkY = (k)*16;
-                    //console.log(newChunk.y);
+                    //console.log(newChunk.chunkY);
                     newChunk.LoadChunk();
-                    newChunk.Setup_Landscape();
+                    //newChunk.Setup_Landscape();
+                    //newChunk.m_pBlocks[0][0][0].SetActive(true);
+                    //newChunk.m_pBlocks[1][0][0].SetActive(true);
                     //newChunk.Setup_Sphere();
-                    //newChunk.Setup_Landscape2(((i+1)/4),((j+1)/4),simplex);
+                    newChunk.Setup_Landscape2(((i+1)/16),((j+1)/16),simplex);
                     
                     newChunk.CreateMesh();
                     newChunk.Render();
