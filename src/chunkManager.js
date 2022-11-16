@@ -9,17 +9,18 @@ export default class ChunkManager{
 
     init(){
         const simplex = new createNoise2D();
-        for(var i = 0; i< 5; i++){
+        for(var i = 0; i< 1; i++){
             this.m_pChunks[i]  = []
-            for(var j = 0; j<5;j++){
+            for(var j = 0; j<1;j++){
                 this.m_pChunks[i][j]  = []
-                for(var k = 0; k<5;k++){
+                for(var k = 0; k<1;k++){
                     var newChunk = new Chunk();
-                    newChunk.y = (k)*16;
+                    newChunk.chunkY = (k)*16;
                     //console.log(newChunk.y);
                     newChunk.LoadChunk();
-                    //newChunk.Setup_Landscape();
-                    newChunk.Setup_Landscape2(((i+1)/4),((j+1)/4),simplex);
+                    newChunk.Setup_Landscape();
+                    //newChunk.Setup_Sphere();
+                    //newChunk.Setup_Landscape2(((i+1)/4),((j+1)/4),simplex);
                     
                     newChunk.CreateMesh();
                     newChunk.Render();

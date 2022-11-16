@@ -6,8 +6,9 @@ export default class Chunk {
     constructor(){
       
     }
-    BLOCK_RENDER_SIZE = 1;
-    x; y; z;
+    BLOCK_RENDER_SIZE =1;
+    //x; y; z;
+    chunkY;
     Update(dt){}
     m_pBlocks = [];
     loaded;
@@ -52,6 +53,7 @@ export default class Chunk {
       //var  cube = new THREE.Mesh(geometry,material);
       //console.log(this.m_pBlocks[0][0][0].IsActive());
       var lDefault = true;
+      
       for (var x = 0; x < CHUNK_SIZE; x++) {
         for (var y = 0; y < CHUNK_SIZE; y++) {
           for (var z = 0; z < CHUNK_SIZE; z++) {
@@ -60,24 +62,41 @@ export default class Chunk {
             }
             else{
               var lXNegative = lDefault;
-              if (x > 0) {lXNegative = !this.m_pBlocks[x - 1][y][z].IsActive()};
+              if (x > 0) {lXNegative = this.m_pBlocks[x - 1][y][z].IsActive()};
+
               var lXPositive = lDefault;
-              if (x < CHUNK_SIZE - 1){lXPositive = !this.m_pBlocks[x + 1][y][z].IsActive()};
+              if (x < CHUNK_SIZE - 1){lXPositive = this.m_pBlocks[x + 1][y][z].IsActive()};
+
               var lYNegative = lDefault;
-              if (y > 0) {lYNegative = !this.m_pBlocks[x][y - 1][z].IsActive()};
+              if (y > 0) {lYNegative = this.m_pBlocks[x][y - 1][z].IsActive()};
+
               var lYPositive = lDefault;
-              if (y < CHUNK_SIZE - 1){ lYPositive = !this.m_pBlocks[x][y + 1][z].IsActive()};
+              if (y < CHUNK_SIZE - 1){ lYPositive = this.m_pBlocks[x][y + 1][z].IsActive()};
+
               var lZNegative = lDefault;
-              if (z > 0){ lZNegative = !this.m_pBlocks[x][y][z - 1].IsActive()};
+              if (z > 0){ lZNegative = this.m_pBlocks[x][y][z - 1].IsActive()};
+
               var lZPositive = lDefault;
-              if (z < CHUNK_SIZE - 1){lZPositive = !this.m_pBlocks[x][y][z + 1].IsActive()};
+              if (z < CHUNK_SIZE - 1){lZPositive = this.m_pBlocks[x][y][z + 1].IsActive()};
               //lYPositive= false;
-              this.CreateCube(x,y,z, lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive);
+              //console.log(lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive);
+              if(y ==0){
+                //console.log(lYNegative, lYPositive);
+              }
+              else if(y == 9){
+                //console.log(lXNegative, lXPositive);
+                //lXPositive = true;
+              }
+              //lYPositive = true;
+              //lYNegative = true;
+              //this.CreateCube(x,y,z, lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive);
+              this.CreateCube(x,y,z, false, false, false, false, false, false);
             }
             
           }
         }
       }
+      console.log(this.vertices);
       //console.log(this.m_pBlocks);
       //m_pRenderer->FinishMesh(m_meshID, -1, m_pChunkManager->GetMaterialID());
     }
@@ -105,8 +124,9 @@ export default class Chunk {
         var b = 1.0;
         var a = 1.0; 
         // Front
-        if(lZNegative){
-          n1 = new THREE.Vector3(0.0 , 0.0 , 1.0 );
+        n1 = new THREE.Vector3(0.0 , 0.0 , 1.0);
+        if(!lZNegative){
+          
           v1 = (p1.add(n1));
           v2 = (p2.add(n1));
           v3 = (p3.add(n1));
@@ -120,13 +140,13 @@ export default class Chunk {
           this.vertices.push(v3);
           this.vertices.push(v4);
         } 
-        
-
         //m_pRenderer->AddTriangleToMesh(m_meshID, v1, v2, v3);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v1, v3, v4); 
+
         // Back 
-        if(lZPositive){
-          n1 = new THREE.Vector3(0.0 , 0.0 , -1.0 );
+        n1 = new THREE.Vector3(0.0 , 0.0 , -1.0 );
+        if(!lZPositive){
+          
           v5 = (p5.add(n1));
           v6 = (p6.add(n1));
           v7 = (p7.add(n1));
@@ -140,11 +160,12 @@ export default class Chunk {
           this.vertices.push(v7);
           this.vertices.push(v8);
         }   
-        
         //m_pRenderer->AddTriangleToMesh(m_meshID, v5, v6, v7);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v5, v7, v8); 
+
         // Right
-        if(lXPositive){
+        
+        if(!lXPositive){
           n1 = new THREE.Vector3(1.0, 0.0, 0.0);
           v2 = (p2.add(n1));
           v5 = (p5.add(n1));
@@ -162,9 +183,11 @@ export default class Chunk {
         
         //m_pRenderer->AddTriangleToMesh(m_meshID, v2, v5, v8);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v2, v8, v3); 
+
         // left
-        if(lXNegative){
-          n1 = new THREE.Vector3(-1.0, 0.0, 0.0);
+        n1 = new THREE.Vector3(-1.0, 0.0, 0.0);
+        if(!lXNegative){
+          
           v6 =(p6.add(n1));
           v1 = (p1.add(n1));
           v4 = (p4.add(n1));
@@ -181,9 +204,11 @@ export default class Chunk {
         
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v1, v4);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v4, v7); 
+
         // Top
-        if(lYPositive){
-          n1 = new THREE.Vector3(0.0 , 1.0 , 0.0 );
+        n1 = new THREE.Vector3(0.0 , 1.0 , 0.0 );
+        if(!lYPositive){
+          
           v4 = (p4.add(n1));
           v3 = (p3.add(n1));
           v8 = (p8.add(n1));
@@ -197,12 +222,13 @@ export default class Chunk {
           this.vertices.push(v8);
           this.vertices.push(v7);
         }  
-        
         // m_pRenderer->AddTriangleToMesh(m_meshID, v4, v3, v8);
         // m_pRenderer->AddTriangleToMesh(m_meshID, v4, v8, v7); 
+
         // Bottom
-        if(lYNegative){
-          n1 = new THREE.Vector3(0.0 , -1.0 , 0.0 );
+        n1 = new THREE.Vector3(0.0 , -1.0 , 0.0 );
+        if(!lYNegative){
+          
           v6 = (p6.add(n1));
           v5 = (p5.add(n1));
           v2 = (p2.add(n1));
@@ -249,7 +275,7 @@ export default class Chunk {
       line.material.opacity = 0.25;
       line.material.transparent = true;
       this.mesh = new THREE.Mesh( this.geometry, material );
-      //this.mesh = line;
+      this.mesh = line;
     }
     Setup_Sphere() {
       var CHUNK_SIZE = this.CHUNK_SIZE;
@@ -273,12 +299,14 @@ export default class Chunk {
     Setup_Landscape() {
       const simplex = new createNoise2D();
       //Texture * heightTexture = m_pRenderer -> GetTexture(m_pChunkManager -> GetHeightMapTexture());
-      for (var x = 0; x < this.CHUNK_SIZE; x++) {
-        for (var z = 0; z < this.CHUNK_SIZE; z++) { // Use the noise library to get the height value of x, z             
+      for (var x = 0; x < this.CHUNK_SIZE-1; x++) {
+        for (var z = 0; z < this.CHUNK_SIZE-1; z++) { // Use the noise library to get the height value of x, z             
           //float height = m_pChunkManager->GetNoiseValue(x, z);              
           // Use the height map texture to get the height value of x, z  
-          var height = (simplex(x/16, z/16) * (this.CHUNK_SIZE - 1) * 1.0 ) * 1.0;
+          //var height = (simplex(x/16, z/16) * (this.CHUNK_SIZE - 1) * 1.0 ) * 1.0;
+          var height = 1;
           for (var y = 0; y < height; y++) {
+            //console.log(y);
             this.m_pBlocks[x][y][z].SetActive(true);
             //this.m_pBlocks[x][y][z].SetBlockType(BlockType_Grass);
           }
@@ -298,7 +326,7 @@ export default class Chunk {
           for (var y = 0; y < this.CHUNK_SIZE; y++) {
             //var height = ((simplex( (x/64)+(xBound), (z/64)+(zBound) )+1) * (this.CHUNK_SIZE - 1) * 1.0 );
             //console.log(height);
-            if(this.y+y < height){
+            if(this.ChunkY+y < height){
               //console.log(this.y+y);
               this.m_pBlocks[x][y][z].SetActive(true);
             }
