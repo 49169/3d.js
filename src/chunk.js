@@ -96,7 +96,7 @@ export default class Chunk {
           }
         }
       }
-      console.log(this.vertices);
+      console.log(this.vertices)
       //console.log(this.m_pBlocks);
       //m_pRenderer->FinishMesh(m_meshID, -1, m_pChunkManager->GetMaterialID());
     }
