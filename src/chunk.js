@@ -114,11 +114,7 @@ export default class Chunk {
         var g = 1.0;
         var b = 1.0;
         var a = 1.0; 
-        var tileSize = 128;
-        var tileTextureWidth = 1152;
-        var tileTextureHeight = 1280;
-        var rangeX = 1;
-        var rangeY = 0;
+       
         
         // Front
         n1 = new THREE.Vector3(0.0 , 0.0 , 1.0);
@@ -136,14 +132,8 @@ export default class Chunk {
           this.vertices.push(v1);
           this.vertices.push(v3);
           this.vertices.push(v4);
-          for(var i = 0; i<6; i++){
-            this.uvs.push(
-              (1 * (tileSize/tileTextureWidth))
-            );
-            this.uvs.push(
-              (0 * (tileSize/tileTextureWidth))
-            );
-          }
+          
+          this.AddUv();
           
          
         } 
@@ -167,14 +157,7 @@ export default class Chunk {
           this.vertices.push(v7);
           this.vertices.push(v8);
 
-          for(var i = 0; i<6; i++){
-            this.uvs.push(
-              (1 * (tileSize/tileTextureWidth))
-            );
-            this.uvs.push(
-              (0 * (tileSize/tileTextureWidth))
-            );
-          }
+          this.AddUv();
           
         }   
         //m_pRenderer->AddTriangleToMesh(m_meshID, v5, v6, v7);
@@ -196,14 +179,7 @@ export default class Chunk {
           this.vertices.push(v8);
           this.vertices.push(v3);
 
-          for(var i = 0; i<6; i++){
-            this.uvs.push(
-              (0 * (tileSize/tileTextureWidth))
-            );
-            this.uvs.push(
-              (0 * (tileSize/tileTextureWidth))
-            );
-          }
+          this.AddUv();
          
         }  
         
@@ -226,14 +202,8 @@ export default class Chunk {
           this.vertices.push(v6);
           this.vertices.push(v4);
           this.vertices.push(v7);
-          for(var i = 0; i<6; i++){
-            this.uvs.push(
-              (1 * (tileSize/tileTextureWidth))
-            );
-            this.uvs.push(
-              (0 * (tileSize/tileTextureWidth))
-            );
-          }
+          
+          this.AddUv();
         }    
         
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v1, v4);
@@ -255,26 +225,8 @@ export default class Chunk {
           this.vertices.push(v4);
           this.vertices.push(v8);
           this.vertices.push(v7);
-          //for(var i = 0; i<6; i++){
-            this.uvs.push(0 * (tileSize/tileTextureWidth));
-            this.uvs.push(0 * (tileSize/tileTextureHeight));
-            
-            this.uvs.push(1 * (tileSize/tileTextureWidth));
-            this.uvs.push(1 * (tileSize/tileTextureHeight));
-            
-            this.uvs.push(0 * (tileSize/tileTextureWidth));
-            this.uvs.push(1 * (tileSize/tileTextureHeight));
-
-            this.uvs.push(0 * (tileSize/tileTextureWidth));
-            this.uvs.push(1 * (tileSize/tileTextureHeight));
-
-            this.uvs.push(0 * (tileSize/tileTextureWidth));
-            this.uvs.push(0 * (tileSize/tileTextureHeight));
-
-            this.uvs.push(1 * (tileSize/tileTextureWidth));
-            this.uvs.push(1 * (tileSize/tileTextureHeight));
-            
-          //}
+          
+          this.AddUv();
           
         }  
         // m_pRenderer->AddTriangleToMesh(m_meshID, v4, v3, v8);
@@ -297,20 +249,37 @@ export default class Chunk {
           this.vertices.push(v2);
           this.vertices.push(v1);
 
-          for(var i = 0; i<6; i++){
-            this.uvs.push(
-              (1 * (tileSize/tileTextureWidth))
-            );
-            this.uvs.push(
-              (1 * (tileSize/tileTextureWidth))
-            );
-          }
+          this.AddUv();
         }
         //console.log(this.vertices.length);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v5, v2);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v2, v1);
     }
-    
+    AddUv(){
+      var tileSize = 128;
+      var tileTextureWidth = 1152;
+      var tileTextureHeight = 1280;
+      var rangeX = 5;
+      var rangeY = 6;
+
+      this.uvs.push((0 + rangeX) * (tileSize/tileTextureWidth));
+      this.uvs.push((0 + rangeY) * (tileSize/tileTextureHeight));
+      
+      this.uvs.push((1 + rangeX)* (tileSize/tileTextureWidth));
+      this.uvs.push((0 + rangeY)* (tileSize/tileTextureHeight));
+      
+      this.uvs.push((1 +rangeX)* (tileSize/tileTextureWidth));
+      this.uvs.push((1 +rangeY)* (tileSize/tileTextureHeight));
+
+      this.uvs.push((0 +rangeX)* (tileSize/tileTextureWidth));
+      this.uvs.push((0 +rangeY)* (tileSize/tileTextureHeight));
+
+      this.uvs.push((1 +rangeX)* (tileSize/tileTextureWidth));
+      this.uvs.push((1 +rangeY)* (tileSize/tileTextureHeight));
+
+      this.uvs.push((0 +rangeX)* (tileSize/tileTextureWidth));
+      this.uvs.push((1 +rangeY)* (tileSize/tileTextureHeight));
+    }
     Render(){
       const loader = new THREE.TextureLoader();
       const texture = loader.load('./assets/spritesheet_tiles.png');
