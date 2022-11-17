@@ -18,7 +18,7 @@ export default class Chunk {
     mesh;
     vertices = [];
     normals = [];
-    uv = [];
+    uvs = [];
     CHUNK_SIZE = 16;
     IsLoaded(){return this.loaded;}
 
@@ -53,8 +53,6 @@ export default class Chunk {
       var CHUNK_SIZE = this.CHUNK_SIZE;
       this.geometry = new THREE.BufferGeometry();
       
-      //var  cube = new THREE.Mesh(geometry,material);
-      //console.log(this.m_pBlocks[0][0][0].IsActive());
       var lDefault = false;
       
       for (var x = 0; x < CHUNK_SIZE; x++) {
@@ -81,17 +79,7 @@ export default class Chunk {
 
               var lZPositive = lDefault;
               if (z < CHUNK_SIZE - 1){lZPositive = this.m_pBlocks[x][y][z + 1].IsActive()};
-              //lYPositive= false;
-              //console.log(lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive);
-              if(y ==0){
-                //console.log(lYNegative, lYPositive);
-              }
-              else if(y == 9){
-                //console.log(lXNegative, lXPositive);
-                //lXPositive = true;
-              }
-              //lYPositive = true;
-              //lYNegative = true;
+             
               this.CreateCube(x,y,z, lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive);
               //this.CreateCube(x,y,z, false, false, false, false, false, false);
             }
@@ -126,6 +114,11 @@ export default class Chunk {
         var g = 1.0;
         var b = 1.0;
         var a = 1.0; 
+        var tileSize = 128;
+        var tileTextureWidth = 1152;
+        var tileTextureHeight = 1280;
+        var rangeX = 1;
+        var rangeY = 0;
         
         // Front
         n1 = new THREE.Vector3(0.0 , 0.0 , 1.0);
@@ -143,6 +136,16 @@ export default class Chunk {
           this.vertices.push(v1);
           this.vertices.push(v3);
           this.vertices.push(v4);
+          for(var i = 0; i<6; i++){
+            this.uvs.push(
+              (1 * (tileSize/tileTextureWidth))
+            );
+            this.uvs.push(
+              (0 * (tileSize/tileTextureWidth))
+            );
+          }
+          
+         
         } 
         //m_pRenderer->AddTriangleToMesh(m_meshID, v1, v2, v3);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v1, v3, v4); 
@@ -163,6 +166,16 @@ export default class Chunk {
           this.vertices.push(v5);
           this.vertices.push(v7);
           this.vertices.push(v8);
+
+          for(var i = 0; i<6; i++){
+            this.uvs.push(
+              (1 * (tileSize/tileTextureWidth))
+            );
+            this.uvs.push(
+              (0 * (tileSize/tileTextureWidth))
+            );
+          }
+          
         }   
         //m_pRenderer->AddTriangleToMesh(m_meshID, v5, v6, v7);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v5, v7, v8); 
@@ -182,6 +195,16 @@ export default class Chunk {
           this.vertices.push(v2);
           this.vertices.push(v8);
           this.vertices.push(v3);
+
+          for(var i = 0; i<6; i++){
+            this.uvs.push(
+              (0 * (tileSize/tileTextureWidth))
+            );
+            this.uvs.push(
+              (0 * (tileSize/tileTextureWidth))
+            );
+          }
+         
         }  
         
         //m_pRenderer->AddTriangleToMesh(m_meshID, v2, v5, v8);
@@ -203,6 +226,14 @@ export default class Chunk {
           this.vertices.push(v6);
           this.vertices.push(v4);
           this.vertices.push(v7);
+          for(var i = 0; i<6; i++){
+            this.uvs.push(
+              (1 * (tileSize/tileTextureWidth))
+            );
+            this.uvs.push(
+              (0 * (tileSize/tileTextureWidth))
+            );
+          }
         }    
         
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v1, v4);
@@ -224,6 +255,27 @@ export default class Chunk {
           this.vertices.push(v4);
           this.vertices.push(v8);
           this.vertices.push(v7);
+          //for(var i = 0; i<6; i++){
+            this.uvs.push(0 * (tileSize/tileTextureWidth));
+            this.uvs.push(0 * (tileSize/tileTextureHeight));
+            
+            this.uvs.push(1 * (tileSize/tileTextureWidth));
+            this.uvs.push(1 * (tileSize/tileTextureHeight));
+            
+            this.uvs.push(0 * (tileSize/tileTextureWidth));
+            this.uvs.push(1 * (tileSize/tileTextureHeight));
+
+            this.uvs.push(0 * (tileSize/tileTextureWidth));
+            this.uvs.push(1 * (tileSize/tileTextureHeight));
+
+            this.uvs.push(0 * (tileSize/tileTextureWidth));
+            this.uvs.push(0 * (tileSize/tileTextureHeight));
+
+            this.uvs.push(1 * (tileSize/tileTextureWidth));
+            this.uvs.push(1 * (tileSize/tileTextureHeight));
+            
+          //}
+          
         }  
         // m_pRenderer->AddTriangleToMesh(m_meshID, v4, v3, v8);
         // m_pRenderer->AddTriangleToMesh(m_meshID, v4, v8, v7); 
@@ -244,20 +296,33 @@ export default class Chunk {
           this.vertices.push(v6);
           this.vertices.push(v2);
           this.vertices.push(v1);
+
+          for(var i = 0; i<6; i++){
+            this.uvs.push(
+              (1 * (tileSize/tileTextureWidth))
+            );
+            this.uvs.push(
+              (1 * (tileSize/tileTextureWidth))
+            );
+          }
         }
-        
+        //console.log(this.vertices.length);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v5, v2);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v6, v2, v1);
     }
     
     Render(){
       const loader = new THREE.TextureLoader();
-      const texture = loader.load('/assets/spreadsheet_tiles.png');
+      const texture = loader.load('./assets/spritesheet_tiles.png');
       texture.magFilter = THREE.NearestFilter;
       texture.minFilter = THREE.NearestFilter;
 
       this.newVertices = [];
       this.newNormals = [];
+      
+        //console.log(this.vertices.length);
+        //console.log(this.uvs);
+
       for(let i = 0; i<this.vertices.length; i++){
           //console.log(this.vertices[i]);
           this.newVertices.push(this.vertices[i].x);
@@ -269,12 +334,14 @@ export default class Chunk {
         this.newNormals.push(this.normals[i].y);
         this.newNormals.push(this.normals[i].z);
       }
-      //console.log(this.newVertices);
+      //console.log(this.uvs);
       this.newVertices = new Float32Array(this.newVertices);
       this.newNormals = new Float32Array(this.newNormals);
-      //console.log(this.newVertices);
+      this.newUVS = new Float32Array(this.uvs);
+      
       this.geometry.setAttribute( 'position', new THREE.BufferAttribute( this.newVertices, 3 ) );
       this.geometry.setAttribute( 'normal', new THREE.BufferAttribute(this.newNormals, 3));
+      this.geometry.setAttribute( 'uv', new THREE.BufferAttribute(this.newUVS, 2));
 
       //const material = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
       const material = new THREE.MeshToonMaterial({map: texture})

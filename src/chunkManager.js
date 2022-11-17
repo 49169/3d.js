@@ -20,9 +20,9 @@ export default class ChunkManager{
                 }
             }
         }
-        for(var i = 0; i< 10; i++){
+        for(var i = 0; i< 5; i++){
             this.m_pChunks[i]  = []
-            for(var j = 0; j<10;j++){
+            for(var j = 0; j<5;j++){
                 this.m_pChunks[i][j]  = []
                 for(var k = 0; k<3;k++){
                     var newChunk = new Chunk();
