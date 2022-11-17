@@ -48,6 +48,10 @@ export default class ChunkManager{
         //UpdateSetupList();
         //UpdateRebuildList();
         //UpdateUnloadList();
+        console.log(cameraPosition);
+        if(this.m_pChunks[cameraPosition.x][cameraPosition.y] == null){
+            console.log("here");
+        }
         if (this.m_cameraPosition != cameraPosition || this.m_cameraView != cameraView) {
            // UpdateRenderList();
         }

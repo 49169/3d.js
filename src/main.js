@@ -10,6 +10,7 @@ import Stats from 'three/addons/libs/stats.module.js';
 import * as THREE from 'three';
 import Chunk from '/src/chunk.js';
 import ChunkManager from '/src/chunkManager.js';
+
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(100, window.innerWidth/window.innerHeight, 0.1, 1000);
 const stats = new Stats();
@@ -19,11 +20,13 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
 document.body.appendChild(stats.dom);
 
-var fly = new OrbitControls(camera, renderer.domElement);
+var fly = new FirstPersonControls(camera, renderer.domElement);
+fly.dragToLook = true;
+fly.lookSpeed = 0.005
 
 var geometry = new THREE.BoxGeometry(1,1,1);
-var  material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-var  cube = new THREE.Mesh(geometry,material);
+var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+var cube = new THREE.Mesh(geometry,material);
 
 var chunk = new Chunk();
 var chunkManager = new ChunkManager();
@@ -44,8 +47,7 @@ for(var i =0 ;i<chunkManager.m_pChunks.length; i++){
 }
 
 chunk.LoadChunk();
-//chunk.Setup_Sphere();
-//chunk.Setup_Landscape();
+
 chunk.CreateMesh();
 
 chunk.Render();
@@ -54,7 +56,7 @@ scene.add(chunk.mesh);
 
 scene.add(cube);
 
-camera.position.set( -10, 0, 50);
+camera.position.set( -10, 0, 100);
 
 const backgroundColor = 0x87ceeb
 
@@ -74,15 +76,11 @@ scene.add(reflectionLight);
 
 function animate(){
     requestAnimationFrame(animate);
-    //fly.update();
+    fly.update(1);
     //chunk.Render();
-    chunkManager.Update();
+    chunkManager.Update(1, camera.position);
     renderer.render(scene, camera);
-    //
-    cube.rotation.x += 0.01;
-    cube.rotation.y -= 0.04;
 
     stats.update();
-
 }
 animate();
