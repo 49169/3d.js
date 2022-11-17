@@ -33,7 +33,7 @@ export default class ChunkManager{
                     //newChunk.m_pBlocks[0][0][0].SetActive(true);
                     //newChunk.m_pBlocks[1][0][0].SetActive(true);
                     //newChunk.Setup_Sphere();
-                    newChunk.Setup_Landscape2(((i+1)/16),((j+1)/16),simplex);
+                    newChunk.Setup_Landscape2(((i+1)/8),((j+1)/8),simplex);
                     
                     newChunk.CreateMesh();
                     newChunk.Render();

@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import Block from '/src/block.js';
+import {BlockType} from '/src/block.js';
 //import Noise from 'https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.js';
 import {createNoise2D} from 'https://cdn.skypack.dev/simplex-noise';
+
 export default class Chunk {
     constructor(){
       
@@ -16,10 +18,12 @@ export default class Chunk {
     mesh;
     vertices = [];
     normals = [];
+    uv = [];
     CHUNK_SIZE = 16;
     IsLoaded(){return this.loaded;}
 
     LoadChunk(){ // Create the blocks
+      
       this.m_pBlocks = [];
       for (var i = 0; i < this.CHUNK_SIZE; i++) {
           this.m_pBlocks[i] = [];
@@ -122,6 +126,7 @@ export default class Chunk {
         var g = 1.0;
         var b = 1.0;
         var a = 1.0; 
+        
         // Front
         n1 = new THREE.Vector3(0.0 , 0.0 , 1.0);
         if(!lZPositive){
@@ -246,6 +251,11 @@ export default class Chunk {
     }
     
     Render(){
+      const loader = new THREE.TextureLoader();
+      const texture = loader.load('/assets/spreadsheet_tiles.png');
+      texture.magFilter = THREE.NearestFilter;
+      texture.minFilter = THREE.NearestFilter;
+
       this.newVertices = [];
       this.newNormals = [];
       for(let i = 0; i<this.vertices.length; i++){
@@ -265,7 +275,9 @@ export default class Chunk {
       //console.log(this.newVertices);
       this.geometry.setAttribute( 'position', new THREE.BufferAttribute( this.newVertices, 3 ) );
       this.geometry.setAttribute( 'normal', new THREE.BufferAttribute(this.newNormals, 3));
-      const material = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
+
+      //const material = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
+      const material = new THREE.MeshToonMaterial({map: texture})
       const wireframe = new THREE.WireframeGeometry( this.geometry );
 
       const line = new THREE.LineSegments( wireframe );
@@ -322,7 +334,7 @@ export default class Chunk {
         for (var z = 0; z < this.CHUNK_SIZE; z++) { // Use the noise library to get the height value of x, z                       
           // Use the height map texture to get the height value of x, z  
           
-          var height = ((simplex( (x/128/2)+(xBound), (z/128/2)+(zBound) )+1) * (this.CHUNK_SIZE - 1) * 1.0 );
+          var height = ((simplex( (x/128)+(xBound), (z/128)+(zBound) )+1) * (this.CHUNK_SIZE - 1) * 1.0 );
           //console.log(height);
           for (var y = 0; y < this.CHUNK_SIZE; y++) {
             //var height = ((simplex( (x/64)+(xBound), (z/64)+(zBound) )+1) * (this.CHUNK_SIZE - 1) * 1.0 );
@@ -330,11 +342,13 @@ export default class Chunk {
             if(this.chunkY+y < height){
               //console.log(this.y+y);
               this.m_pBlocks[x][y][z].SetActive(true);
+              this.m_pBlocks[x][y][z].SetBlockType(BlockType.BlockType_Grass);
             }
-            //this.m_pBlocks[x][y][z].SetBlockType(BlockType_Grass);
+            
           }
         }
       }
+      //console.log(BlockType);
     }
 };
 
