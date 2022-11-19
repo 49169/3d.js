@@ -1,6 +1,7 @@
 //import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.146.0/three.module.js';
 //import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
-import { Controls} from './FirstPersonControl.js';
+
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 import { VertexNormalsHelper } from 'three/addons/helpers/VertexNormalsHelper.js';
@@ -21,10 +22,13 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
 document.body.appendChild(stats.dom);
 
-var fly = new Controls(camera);
-scene.add(fly.getObject());
+//var fly = new Controls(camera);
+//scene.add(fly.getObject());
+var pointLock = new PointerLockControls(camera, renderer.domElement);
+pointLock.lock();
+scene.add(pointLock.getObject());
 //fly.dragToLook = true;
-fly.lookSpeed = 0.002;
+//fly.lookSpeed = 0.002;
 
 var geometry = new THREE.BoxGeometry(1,1,1);
 var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
@@ -78,7 +82,8 @@ scene.add(reflectionLight);
 
 function animate(){
     requestAnimationFrame(animate);
-    fly.update();
+    //fly.update();
+    //pointLock.lock();
     //chunk.Render();
     //console.log(camera);
     chunkManager.Update(1, camera.position, scene);
