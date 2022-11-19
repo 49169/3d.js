@@ -56,11 +56,11 @@ export default class ChunkManager{
         var camX = Math.floor((cameraPosition.x + this.WORLD_SIZE/2)/16);
         var camZ = Math.floor((cameraPosition.z + this.WORLD_SIZE/2)/16);
         //console.log(camX + ", " + camZ);
-        console.log(cameraPosition);
+        //console.log(cameraPosition);
         //console.log(this.m_pChunks[22]);
         if(camX <= this.WORLD_SIZE){
             if(this.m_pChunks[camX] == null){
-                console.log("here: " + camX);
+                //console.log("here: " + camX);
                 this.m_pChunks[camX] = [];
             }
         }
