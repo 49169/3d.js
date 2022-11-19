@@ -30,8 +30,8 @@ var cube = new THREE.Mesh(geometry,material);
 
 var chunk = new Chunk();
 var chunkManager = new ChunkManager();
-chunkManager.init();
-chunkManager.Update();
+//chunkManager.init();
+//chunkManager.Update();
 
 //console.log(chunkManager.m_pChunks);
 
@@ -56,7 +56,7 @@ scene.add(chunk.mesh);
 
 scene.add(cube);
 
-camera.position.set( -10, 0, 100);
+camera.position.set( 0, 50, 0);
 
 const backgroundColor = 0x87ceeb
 
@@ -78,7 +78,8 @@ function animate(){
     requestAnimationFrame(animate);
     fly.update(1);
     //chunk.Render();
-    chunkManager.Update(1, camera.position);
+    //console.log(camera);
+    chunkManager.Update(1, camera.position, scene);
     renderer.render(scene, camera);
 
     stats.update();

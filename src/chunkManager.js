@@ -7,9 +7,11 @@ export default class ChunkManager{
     m_forceVisibilityUpdate;
     m_pChunks = [];
     CHUNK_SIZE = 16;
+    WORLD_SIZE = 64;
+    simplex = new createNoise2D();
 
     init(){
-        const simplex = new createNoise2D();
+        //simplex = new createNoise2D();
         var noiseMap = [];
         for(var i = 0; i< 10; i++){
             for(var j = 0; j<10;j++){
@@ -33,7 +35,7 @@ export default class ChunkManager{
                     //newChunk.m_pBlocks[0][0][0].SetActive(true);
                     //newChunk.m_pBlocks[1][0][0].SetActive(true);
                     //newChunk.Setup_Sphere();
-                    newChunk.Setup_Landscape2(((i+1)/8),((j+1)/8),simplex);
+                    newChunk.Setup_Landscape2(((i+1)/8),((j+1)/8),this.simplex);
                     
                     newChunk.CreateMesh();
                     newChunk.Render();
@@ -43,20 +45,56 @@ export default class ChunkManager{
         }
     }
 
-    Update(dt , cameraPosition, cameraView){
+    Update(dt , cameraPosition, scene){
         this.UpdateLoadList();
+        //console.log(this.m_pChunks);
         //UpdateSetupList();
         //UpdateRebuildList();
         //UpdateUnloadList();
+        //console.log(cameraPosition);
+        //console.log(this.m_pChunks[0][0]);
+        var camX = Math.floor((cameraPosition.x + this.WORLD_SIZE/2)/16);
+        var camZ = Math.floor((cameraPosition.z + this.WORLD_SIZE/2)/16);
+        //console.log(camX + ", " + camZ);
         console.log(cameraPosition);
-        if(this.m_pChunks[cameraPosition.x][cameraPosition.y] == null){
-            console.log("here");
+        //console.log(this.m_pChunks[22]);
+        if(camX <= this.WORLD_SIZE){
+            if(this.m_pChunks[camX] == null){
+                console.log("here: " + camX);
+                this.m_pChunks[camX] = [];
+            }
         }
-        if (this.m_cameraPosition != cameraPosition || this.m_cameraView != cameraView) {
+        if(camZ <= this.WORLD_SIZE){
+            if(this.m_pChunks[camX][camZ]==null){
+                //for(var j = 0; j<1;j++){
+                    this.m_pChunks[camX][camZ]  = []
+                    for(var k = 0; k<3;k++){
+                        var newChunk = new Chunk();
+                        newChunk.chunkY = (k)*16;
+                        //console.log(newChunk.chunkY);
+                        newChunk.LoadChunk();
+                        //newChunk.Setup_Landscape();
+                        //newChunk.m_pBlocks[0][0][0].SetActive(true);
+                        //newChunk.m_pBlocks[1][0][0].SetActive(true);
+                        //newChunk.Setup_Sphere();
+                        newChunk.Setup_Landscape2(((camX+1)/8),((camZ+1)/8),this.simplex);
+                        
+                        newChunk.CreateMesh();
+                        newChunk.Render();
+                        newChunk.mesh.position.set((camX-2)*16,(k-2)*16,(camZ-2)*16);
+                        
+                        scene.add(newChunk.mesh);
+                        this.m_pChunks[camX][camZ][k] = newChunk;
+                    }
+                //}
+            }
+        }
+        
+        //if (this.m_cameraPosition != cameraPosition || this.m_cameraView != cameraView) {
            // UpdateRenderList();
-        }
+        //}
         this.m_cameraPosition = cameraPosition;
-        this.m_cameraView = cameraView;
+        //this.m_cameraView = cameraView;
     }
 
     UpdateLoadList(){
