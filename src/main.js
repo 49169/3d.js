@@ -2,6 +2,7 @@
 //import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
 
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+import Controls from './Controls.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 import { VertexNormalsHelper } from 'three/addons/helpers/VertexNormalsHelper.js';
@@ -25,8 +26,11 @@ document.body.appendChild(stats.dom);
 //var fly = new Controls(camera);
 //scene.add(fly.getObject());
 var pointLock = new PointerLockControls(camera, renderer.domElement);
-pointLock.lock();
-scene.add(pointLock.getObject());
+//pointLock.lock();
+//scene.add(pointLock.getObject());
+var controls = new Controls(camera, renderer.domElement, document);
+controls.init();
+scene.add(controls.controls.getObject());
 //fly.dragToLook = true;
 //fly.lookSpeed = 0.002;
 
@@ -82,6 +86,7 @@ scene.add(reflectionLight);
 
 function animate(){
     requestAnimationFrame(animate);
+    //controls.update();
     //fly.update();
     //pointLock.lock();
     //chunk.Render();
