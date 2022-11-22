@@ -310,7 +310,7 @@ export default class Chunk {
       
       this.geometry.setAttribute( 'position', new THREE.BufferAttribute( this.newVertices, 3 ) );
       this.geometry.setAttribute( 'normal', new THREE.BufferAttribute(this.newNormals, 3));
-      this.geometry.setAttribute( 'uv', new THREE.BufferAttribute(this.newUVS, 2));
+      //this.geometry.setAttribute( 'uv', new THREE.BufferAttribute(this.newUVS, 2));
 
       //const material = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
       const material = new THREE.MeshToonMaterial({map: texture})
