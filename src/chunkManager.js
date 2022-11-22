@@ -62,8 +62,8 @@ export default class ChunkManager{
         //console.log(this.m_pChunks[22]);
         //if(camX <= this.WORLD_SIZE){
             var chunksCreated = 0;
-            for(var x=-4; x<4; x++){
-                for(var z=-4; z<4; z++){
+            for(var x=-2; x<2; x++){
+                for(var z=-2; z<2; z++){
                     //console.log("here");
                 //if (Math.sqrt((x - (8 / 2)) * (x - (8 / 2)) + (z - (8/ 2)) * (z - (8/ 2))) <= (8 / 2)) {
                     if(this.m_pChunks[camX+x] == null){

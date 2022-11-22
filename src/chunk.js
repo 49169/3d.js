@@ -3,7 +3,7 @@ import Block from '/src/block.js';
 import {BlockType} from '/src/block.js';
 //import Noise from 'https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.js';
 import {createNoise2D} from 'https://cdn.skypack.dev/simplex-noise';
-
+import { GreedyMesh } from './greedy.js';
 export default class Chunk {
     constructor(){
       
@@ -19,6 +19,7 @@ export default class Chunk {
     vertices = [];
     normals = [];
     uvs = [];
+    volume = []
     CHUNK_SIZE = 16;
     IsLoaded(){return this.loaded;}
 
@@ -59,7 +60,7 @@ export default class Chunk {
         for (var y = 0; y < CHUNK_SIZE; y++) {
           for (var z = 0; z < CHUNK_SIZE; z++) {
             if (this.m_pBlocks[x][y][z].IsActive() == false) { // Don't create triangle data for inactive blocks
-              //continue;
+              this.volume[x+16 *(y+16*z)] = false;
             }
             else{
               var lXNegative = lDefault;
@@ -81,6 +82,7 @@ export default class Chunk {
               if (z < CHUNK_SIZE - 1){lZPositive = this.m_pBlocks[x][y][z + 1].IsActive()};
              
               this.CreateCube(x,y,z, lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive);
+              this.volume[x+16 *(y+16*z)] = true;
               //this.CreateCube(x,y,z, false, false, false, false, false, false);
             }
             
@@ -135,7 +137,6 @@ export default class Chunk {
           
           this.AddUv();
           
-         
         } 
         //m_pRenderer->AddTriangleToMesh(m_meshID, v1, v2, v3);
         //m_pRenderer->AddTriangleToMesh(m_meshID, v1, v3, v4); 
@@ -285,9 +286,10 @@ export default class Chunk {
       const texture = loader.load('./assets/spritesheet_tiles.png');
       texture.magFilter = THREE.NearestFilter;
       texture.minFilter = THREE.NearestFilter;
-
+      const greedy = new GreedyMesh(this.volume, [16,16,16]);
       this.newVertices = [];
       this.newNormals = [];
+      this.newVolume = [];
       
         //console.log(this.vertices.length);
         //console.log(this.uvs);
@@ -303,12 +305,20 @@ export default class Chunk {
         this.newNormals.push(this.normals[i].y);
         this.newNormals.push(this.normals[i].z);
       }
-      //console.log(this.uvs);
+      for(var i =0; i<greedy.length;i++){
+        for(var x =0;x<greedy[i].length;x++){
+          this.newVolume.push(greedy[i][x][0]);
+          this.newVolume.push(greedy[i][x][1]);
+          this.newVolume.push(greedy[i][x][2]);
+          
+        }
+      }
+      //console.log(greedy);
       this.newVertices = new Float32Array(this.newVertices);
       this.newNormals = new Float32Array(this.newNormals);
       this.newUVS = new Float32Array(this.uvs);
       
-      this.geometry.setAttribute( 'position', new THREE.BufferAttribute( this.newVertices, 3 ) );
+      this.geometry.setAttribute( 'position', new THREE.BufferAttribute( new Float32Array(this.newVolume), 3 ) );
       this.geometry.setAttribute( 'normal', new THREE.BufferAttribute(this.newNormals, 3));
       //this.geometry.setAttribute( 'uv', new THREE.BufferAttribute(this.newUVS, 2));
 
