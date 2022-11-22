@@ -58,12 +58,36 @@ export default class ChunkManager{
         //console.log(camX + ", " + camZ);
         //console.log(cameraPosition);
         //console.log(this.m_pChunks[22]);
-        if(camX <= this.WORLD_SIZE){
-            if(this.m_pChunks[camX] == null){
-                //console.log("here: " + camX);
-                this.m_pChunks[camX] = [];
+        //if(camX <= this.WORLD_SIZE){
+            
+            for(var x = 0; x<4; x++){
+                for(var z=0; z<4; z++){
+                //if (Math.sqrt((x - (8 / 2)) * (x - (8 / 2)) + (z - (8/ 2)) * (z - (8/ 2))) <= (8 / 2)) {
+                    if(this.m_pChunks[camX+x] == null){
+                        this.m_pChunks[camX+x] = [];
+                        if(this.m_pChunks[camX+x][camZ+z]==null){
+                            this.m_pChunks[camX+x][camZ+z]  = []
+                            for(var k = 0; k<3;k++){
+                                var newChunk = new Chunk();
+                                newChunk.chunkY = (k)*16;
+                                
+                                newChunk.LoadChunk();
+                                
+                                newChunk.Setup_Landscape2(((camX+1+x)/8),((camZ+1+z)/8),this.simplex);
+                                
+                                newChunk.CreateMesh();
+                                newChunk.Render();
+                                newChunk.mesh.position.set((camX-2+x)*16,(k-2)*16,(camZ-2+z)*16);
+                                
+                                scene.add(newChunk.mesh);
+                                this.m_pChunks[camX+x][camZ+z][k] = newChunk;
+                            }
+                        }
+                    }
+                   // }
+                }
             }
-        }
+        /*
         if(camZ <= this.WORLD_SIZE){
             if(this.m_pChunks[camX][camZ]==null){
                 //for(var j = 0; j<1;j++){
@@ -89,7 +113,7 @@ export default class ChunkManager{
                 //}
             }
         }
-        
+        */
         //if (this.m_cameraPosition != cameraPosition || this.m_cameraView != cameraView) {
            // UpdateRenderList();
         //}

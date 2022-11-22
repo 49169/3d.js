@@ -5,29 +5,39 @@ export default class Controls{
     constructor(camera, domElement, document){
         this.camera = camera;
         this.domElement =domElement
-        
         this.document = document;
+
+        //let moveForward = false; let moveBackward = false; let moveLeft = false; let moveRight = false; let canJump = false;
+        //this.moveForward = moveForward;
+        this.init();
         //this.controls = new PointerLockControls(this.camera, this.domElement);
     }
     camera; domElement;document; controls; prevTime = performance.now();
     //Movement Controls
-    moveForward = false; moveBackward = false; moveLeft = false; moveRight = false; canJump = false;
+    
     velocity = new THREE.Vector3();
 	direction = new THREE.Vector3();
 	vertex = new THREE.Vector3();
 	color = new THREE.Color();
     init(){
-        //const blocker = document.getElementById( 'blocker' );
-        const instructions = this.document.getElementById( 'instructions' );
-        this.controls = new PointerLockControls(this.camera, this.domElement)
-        console.log(this.controls);
 
-        const onKeyDown = function ( event ) {
+        const instructions = this.document.getElementById( 'instructions' );
+        const controls = new PointerLockControls(this.camera, this.domElement)
+        this.controls = controls;
+        
+       
+        const mouseLock = function(){
+            
+            controls.lock();
+            
+            console.log("click");
+        }
+        this.document.addEventListener( 'keydown',(event)=>{
             switch ( event.code ) {
                 case 'ArrowUp':
                 case 'KeyW':
                     this.moveForward = true;
-                    console.log("forward");
+                    //onsole.log(this.moveForward);
                     break;
                 case 'ArrowLeft':
                 case 'KeyA':
@@ -42,12 +52,12 @@ export default class Controls{
                     this.moveRight = true;
                     break;
                 case 'Space':
-                    if ( this.canJump === true ) velocity.y += 350;
+                    if ( this.canJump === true ) this.velocity.y += 350;
                     this.canJump = false;
                     break;
             }
-        };
-        const onKeyUp = function ( event ) {
+        });
+        this.document.addEventListener( 'keyup', (event)=>{
             switch ( event.code ) {
                 case 'ArrowUp':
                 case 'KeyW':
@@ -66,34 +76,36 @@ export default class Controls{
                     this.moveRight = false;
                     break;
             }
-        };
-        const mouseLock = function(){
-            var controls = this.controls;
-
-            console.log(controls);
-            this.controls.lock();
-            console.log("click");
-        }
-        this.document.addEventListener( 'keydown', onKeyDown );
-        this.document.addEventListener( 'keyup', onKeyUp );
+        });
         this.document.addEventListener( 'click', mouseLock);
         //this.controls.isLocked = true;
-        //this.controls.lock();
     }
+    
     update(){
         const time = performance.now();
+        //const forward = this.moveForward;
+        //console.log(this.moveForward);
         if ( this.controls.isLocked === true ) {
-            //this.controls.lock();
+            
             const delta = ( time - this.prevTime ) / 1000;
             this.velocity.x -= this.velocity.x * 10.0 * delta;
             this.velocity.z -= this.velocity.z * 10.0 * delta;
             this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-            this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
-            this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
+            var forward = this.moveForward ? 1:0;
+            var backward = this.moveBackward ? -1:0;
+            var left = this.moveLeft? -1:0;
+            var right = this.moveRight ? 1:0;
+            this.direction.z = forward + backward;
+            this.direction.x = left + right;
+
+            //console.log(this.direction);
             this.direction.normalize(); // this ensures consistent movements in all directions
-            if ( this.moveForward || this.moveBackward ) this.velocity.z -= this.direction.z * 400.0 * delta;
-            if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * 400.0 * delta;
+            if ( this.moveForward || this.moveBackward ){
+                this.velocity.z -= this.direction.z * 400.0 * delta;
+            } 
             
+            if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * 400.0 * delta;
+            //console.log(this.controls.getObject().position);
             this.controls.moveRight( - this.velocity.x * delta );
             this.controls.moveForward( - this.velocity.z * delta );
             this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior

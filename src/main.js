@@ -28,8 +28,8 @@ document.body.appendChild(stats.dom);
 var pointLock = new PointerLockControls(camera, renderer.domElement);
 //pointLock.lock();
 //scene.add(pointLock.getObject());
-var controls = new Controls(camera, renderer.domElement, document);
-controls.init();
+const controls = new Controls(camera, renderer.domElement, document);
+//controls.init();
 scene.add(controls.controls.getObject());
 //fly.dragToLook = true;
 //fly.lookSpeed = 0.002;
@@ -86,7 +86,8 @@ scene.add(reflectionLight);
 
 function animate(){
     requestAnimationFrame(animate);
-    //controls.update();
+    //console.log(controls.moveForward);
+    controls.update();
     //fly.update();
     //pointLock.lock();
     //chunk.Render();
