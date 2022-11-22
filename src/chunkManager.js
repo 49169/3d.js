@@ -53,40 +53,51 @@ export default class ChunkManager{
         //UpdateUnloadList();
         //console.log(cameraPosition);
         //console.log(this.m_pChunks[0][0]);
+        //Offset camera by half the world size, then divide coords by 16 to get player's current chunk
         var camX = Math.floor((cameraPosition.x + this.WORLD_SIZE/2)/16);
         var camZ = Math.floor((cameraPosition.z + this.WORLD_SIZE/2)/16);
+
         //console.log(camX + ", " + camZ);
         //console.log(cameraPosition);
         //console.log(this.m_pChunks[22]);
         //if(camX <= this.WORLD_SIZE){
-            
-            for(var x = 0; x<4; x++){
-                for(var z=0; z<4; z++){
+            var chunksCreated = 0;
+            for(var x=-4; x<4; x++){
+                for(var z=-4; z<4; z++){
+                    //console.log("here");
                 //if (Math.sqrt((x - (8 / 2)) * (x - (8 / 2)) + (z - (8/ 2)) * (z - (8/ 2))) <= (8 / 2)) {
                     if(this.m_pChunks[camX+x] == null){
                         this.m_pChunks[camX+x] = [];
-                        if(this.m_pChunks[camX+x][camZ+z]==null){
-                            this.m_pChunks[camX+x][camZ+z]  = []
-                            for(var k = 0; k<3;k++){
-                                var newChunk = new Chunk();
-                                newChunk.chunkY = (k)*16;
-                                
-                                newChunk.LoadChunk();
-                                
-                                newChunk.Setup_Landscape2(((camX+1+x)/8),((camZ+1+z)/8),this.simplex);
-                                
-                                newChunk.CreateMesh();
-                                newChunk.Render();
-                                newChunk.mesh.position.set((camX-2+x)*16,(k-2)*16,(camZ-2+z)*16);
-                                
-                                scene.add(newChunk.mesh);
-                                this.m_pChunks[camX+x][camZ+z][k] = newChunk;
-                            }
+                    }
+                    if(this.m_pChunks[camX+x][camZ+z]==null){
+                        this.m_pChunks[camX+x][camZ+z]  = []
+                            
+                        for(var k = 0; k<2;k++){
+                            var newChunk = new Chunk();
+                            newChunk.chunkY = (k)*16;
+                            
+                            newChunk.LoadChunk();
+                            
+                            newChunk.Setup_Landscape2(((camX+1+x)/8),((camZ+1+z)/8),this.simplex);
+                            
+                            newChunk.CreateMesh();
+                            newChunk.Render();
+                            newChunk.mesh.position.set((camX-2+x)*16,(k-2)*16,(camZ-2+z)*16);
+                            
+                            scene.add(newChunk.mesh);
+                            this.m_pChunks[camX+x][camZ+z][k] = newChunk;
+                            //console.log(camX + x +", " + camZ + z);
+                            chunksCreated += 1;
                         }
                     }
-                   // }
                 }
             }
+                   // }
+            
+        
+            
+            
+            
         /*
         if(camZ <= this.WORLD_SIZE){
             if(this.m_pChunks[camX][camZ]==null){

@@ -259,8 +259,8 @@ export default class Chunk {
       var tileSize = 128;
       var tileTextureWidth = 1152;
       var tileTextureHeight = 1280;
-      var rangeX = 5;
-      var rangeY = 6;
+      var rangeX = 8;
+      var rangeY = 9;
 
       this.uvs.push((0 + rangeX) * (tileSize/tileTextureWidth));
       this.uvs.push((0 + rangeY) * (tileSize/tileTextureHeight));
